@@ -88,12 +88,8 @@ export default function DogeTicTacToe() {
         <div className="bg-gradient-to-r from-yellow-100 to-orange-100 rounded-2xl p-4 mb-6">
           <div className="flex justify-between items-center">
             <div className="text-center">
-              <div className="w-12 h-12 mx-auto mb-2 rounded-full overflow-hidden border-2 border-orange-300">
-                <img 
-                  src="https://i.imgur.com/QFMJwGH.png" 
-                  alt="Player 1 Doge" 
-                  className="w-full h-full object-cover"
-                />
+              <div className="w-12 h-12 mx-auto mb-2 rounded-full bg-gradient-to-br from-yellow-300 to-orange-300 border-2 border-orange-400 flex items-center justify-center text-2xl">
+                🐕
               </div>
               <div className="text-2xl font-bold text-orange-600">{scores.X}</div>
               <div className="text-sm text-gray-600">Player 1</div>
@@ -103,12 +99,8 @@ export default function DogeTicTacToe() {
               <div className="text-xs">⚡</div>
             </div>
             <div className="text-center">
-              <div className="w-12 h-12 mx-auto mb-2 rounded-full overflow-hidden border-2 border-orange-300">
-                <img 
-                  src="https://i.imgur.com/BQmOvKn.png" 
-                  alt="Player 2 Doge" 
-                  className="w-full h-full object-cover"
-                />
+              <div className="w-12 h-12 mx-auto mb-2 rounded-full bg-gradient-to-br from-orange-300 to-red-300 border-2 border-red-400 flex items-center justify-center text-2xl">
+                🚀
               </div>
               <div className="text-2xl font-bold text-orange-600">{scores.O}</div>
               <div className="text-sm text-gray-600">Player 2</div>
@@ -140,18 +132,14 @@ export default function DogeTicTacToe() {
               disabled={!!cell || gameOver}
             >
               {cell === 'X' && (
-                <img 
-                  src="https://i.imgur.com/QFMJwGH.png" 
-                  alt="Doge Player 1" 
-                  className="w-full h-full object-contain rounded-lg"
-                />
+                <div className="w-full h-full bg-gradient-to-br from-yellow-300 to-orange-300 rounded-lg flex items-center justify-center text-4xl border-2 border-orange-400">
+                  🐕
+                </div>
               )}
               {cell === 'O' && (
-                <img 
-                  src="https://i.imgur.com/BQmOvKn.png" 
-                  alt="Doge Player 2" 
-                  className="w-full h-full object-contain rounded-lg"
-                />
+                <div className="w-full h-full bg-gradient-to-br from-orange-300 to-red-300 rounded-lg flex items-center justify-center text-4xl border-2 border-red-400">
+                  🚀
+                </div>
               )}
             </button>
           ))}
@@ -183,6 +171,9 @@ export default function DogeTicTacToe() {
     </div>
   );
 }
+
+
+
 
 
 
