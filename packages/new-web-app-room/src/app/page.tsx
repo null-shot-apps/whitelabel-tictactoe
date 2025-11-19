@@ -1,84 +1,162 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-const slogans = [
-  "Turn chats into apps",
-  "Prompt. Ship. Repeat.",
-  "Build anything from a chat",
-  "Ideas → Apps, instantly",
-  "From zero to MVP in minutes",
-  "Your cofounder in the command line",
-  "Draft, iterate, deploy",
-  "Ship faster than you can type",
-  "Design in text, deliver in code",
-  "Dream it. Prompt it. Run it.",
-  "Chat-native app building",
-  "From prompt to product",
-  "One prompt, infinite apps",
-  "Stop scaffolding. Start shipping.",
-  "Prototype at the speed of thought",
-  "Make conversations executable"
-];
+type Player = 'X' | 'O' | null;
+type Board = Player[];
 
-export default function Landing() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isVisible, setIsVisible] = useState(true);
+export default function DogeTicTacToe() {
+  const [board, setBoard] = useState<Board>(Array(9).fill(null));
+  const [currentPlayer, setCurrentPlayer] = useState<'X' | 'O'>('X');
+  const [scores, setScores] = useState({ X: 0, O: 0 });
+  const [winner, setWinner] = useState<Player>(null);
+  const [gameOver, setGameOver] = useState(false);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIsVisible(false);
-      setTimeout(() => {
-        setCurrentIndex((prev) => (prev + 1) % slogans.length);
-        setIsVisible(true);
-      }, 400);
-    }, 2800);
+  const winningCombinations = [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+    [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+    [0, 4, 8], [2, 4, 6] // diagonals
+  ];
 
-    return () => clearInterval(interval);
-  }, []);
+  const checkWinner = (board: Board): Player => {
+    for (const combo of winningCombinations) {
+      const [a, b, c] = combo;
+      if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+        return board[a];
+      }
+    }
+    return null;
+  };
+
+  const handleCellClick = (index: number) => {
+    if (board[index] || gameOver) return;
+
+    const newBoard = [...board];
+    newBoard[index] = currentPlayer;
+    setBoard(newBoard);
+
+    const gameWinner = checkWinner(newBoard);
+    if (gameWinner) {
+      setWinner(gameWinner);
+      setGameOver(true);
+      setScores(prev => ({
+        ...prev,
+        [gameWinner]: prev[gameWinner] + 1
+      }));
+    } else if (newBoard.every(cell => cell !== null)) {
+      setGameOver(true);
+      setWinner(null); // tie
+    } else {
+      setCurrentPlayer(currentPlayer === 'X' ? 'O' : 'X');
+    }
+  };
+
+  const resetGame = () => {
+    setBoard(Array(9).fill(null));
+    setCurrentPlayer('X');
+    setWinner(null);
+    setGameOver(false);
+  };
+
+  const resetScores = () => {
+    setScores({ X: 0, O: 0 });
+    resetGame();
+  };
+
+  const getStatusMessage = () => {
+    if (winner) {
+      return winner === 'X' ? 'Much win! Player 1 wins! 🐕' : 'Such victory! Player 2 wins! 🚀';
+    }
+    if (gameOver) {
+      return 'Wow! Much tie! So equal! 🤝';
+    }
+    return currentPlayer === 'X' ? 'Player 1\'s turn (X) 🎯' : 'Player 2\'s turn (O) 🎮';
+  };
 
   return (
-    <div className="relative h-[100dvh] w-full overflow-hidden bg-black text-white">
-      {/* Enhanced animated aurora background layers */}
-      <div className="absolute inset-0 bg-aurora-layer-1" />
-      <div className="absolute inset-0 bg-aurora-layer-2" />
-      <div className="absolute inset-0 bg-aurora-layer-3" />
-      
-      {/* Floating particles overlay */}
-      <div className="absolute inset-0 bg-particles" />
-      
-      {/* Main content - centered */}
-      <main className="relative z-10 h-full flex flex-col items-center justify-center px-6">
-        <h1 className="text-center text-[clamp(28px,6vw,64px)] font-medium tracking-tight mb-4">
-          Turn Chats into Apps
-        </h1>
-        
-        {/* Rotating slogans */}
-        <div className="mt-4 h-8 md:h-10 overflow-hidden flex items-center justify-center">
-          <span
-            className={`inline-block text-center text-[clamp(18px,3vw,32px)] font-light transition-all duration-[400ms] ease-in-out ${
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
-            }`}
-          >
-            {slogans[currentIndex]}
-          </span>
+    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-orange-400 to-yellow-500 flex items-center justify-center p-4">
+      <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full">
+        {/* Header */}
+        <div className="text-center mb-6">
+          <h1 className="text-4xl font-bold text-orange-600 mb-2">
+            🐕 DOGE TIC TAC TOE 🚀
+          </h1>
+          <p className="text-gray-600 text-sm">Much fun! Very game! Wow!</p>
         </div>
-      </main>
-      
-      {/* Start Prompting arrow pointing left - bottom left */}
-      <div className="absolute left-6 md:left-8 bottom-[5%] z-20 flex items-center gap-3 arrow-point-left">
-        <div className="flex items-center gap-2 text-white/80 font-medium text-sm md:text-base">
-          <svg 
-            className="w-5 h-5 md:w-6 md:h-6 animate-bounce-horizontal" 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor"
+
+        {/* Score Board */}
+        <div className="bg-gradient-to-r from-yellow-100 to-orange-100 rounded-2xl p-4 mb-6">
+          <div className="flex justify-between items-center">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-orange-600">{scores.X}</div>
+              <div className="text-sm text-gray-600">Player 1 (X)</div>
+              <div className="text-xs">🏆</div>
+            </div>
+            <div className="text-center">
+              <div className="text-lg font-semibold text-orange-500">VS</div>
+              <div className="text-xs">⚡</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-orange-600">{scores.O}</div>
+              <div className="text-sm text-gray-600">Player 2 (O)</div>
+              <div className="text-xs">🚀</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Status Message */}
+        <div className="text-center mb-6">
+          <p className="text-lg font-semibold text-gray-700">
+            {getStatusMessage()}
+          </p>
+        </div>
+
+        {/* Game Board */}
+        <div className="grid grid-cols-3 gap-3 mb-6">
+          {board.map((cell, index) => (
+            <button
+              key={index}
+              onClick={() => handleCellClick(index)}
+              className={`
+                aspect-square text-4xl font-bold rounded-xl border-4 transition-all duration-200
+                ${cell 
+                  ? 'bg-gradient-to-br from-orange-200 to-yellow-200 border-orange-300' 
+                  : 'bg-white border-gray-300 hover:border-orange-400 hover:bg-orange-50'
+                }
+                ${!cell && !gameOver ? 'cursor-pointer transform hover:scale-105' : 'cursor-not-allowed'}
+                ${cell === 'X' ? 'text-orange-600' : 'text-yellow-600'}
+              `}
+              disabled={!!cell || gameOver}
+            >
+              {cell}
+            </button>
+          ))}
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex gap-3">
+          <button
+            onClick={resetGame}
+            className="flex-1 bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-semibold py-3 px-6 rounded-xl hover:from-orange-600 hover:to-yellow-600 transition-all duration-200 transform hover:scale-105"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          <span>Start prompting</span>
+            🔄 New Game
+          </button>
+          <button
+            onClick={resetScores}
+            className="flex-1 bg-gradient-to-r from-gray-500 to-gray-600 text-white font-semibold py-3 px-6 rounded-xl hover:from-gray-600 hover:to-gray-700 transition-all duration-200 transform hover:scale-105"
+          >
+            🗑️ Reset Scores
+          </button>
+        </div>
+
+        {/* Footer */}
+        <div className="text-center mt-6">
+          <p className="text-xs text-gray-500">
+            To the moon! 🌙 Much gaming! Such strategy! Wow!
+          </p>
         </div>
       </div>
     </div>
   );
 }
+
