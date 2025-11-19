@@ -70,7 +70,7 @@ export default function DogeTicTacToe() {
     if (gameOver) {
       return 'Wow! Much tie! So equal! 🤝';
     }
-    return currentPlayer === 'X' ? 'Player 1\'s turn (X) 🎯' : 'Player 2\'s turn (O) 🎮';
+    return currentPlayer === 'X' ? 'Player 1\'s turn 🎯' : 'Player 2\'s turn 🎮';
   };
 
   return (
@@ -88,18 +88,30 @@ export default function DogeTicTacToe() {
         <div className="bg-gradient-to-r from-yellow-100 to-orange-100 rounded-2xl p-4 mb-6">
           <div className="flex justify-between items-center">
             <div className="text-center">
+              <div className="w-12 h-12 mx-auto mb-2 rounded-full overflow-hidden border-2 border-orange-300">
+                <img 
+                  src="https://i.imgur.com/QFMJwGH.png" 
+                  alt="Player 1 Doge" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
               <div className="text-2xl font-bold text-orange-600">{scores.X}</div>
-              <div className="text-sm text-gray-600">Player 1 (X)</div>
-              <div className="text-xs">🏆</div>
+              <div className="text-sm text-gray-600">Player 1</div>
             </div>
             <div className="text-center">
               <div className="text-lg font-semibold text-orange-500">VS</div>
               <div className="text-xs">⚡</div>
             </div>
             <div className="text-center">
+              <div className="w-12 h-12 mx-auto mb-2 rounded-full overflow-hidden border-2 border-orange-300">
+                <img 
+                  src="https://i.imgur.com/BQmOvKn.png" 
+                  alt="Player 2 Doge" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
               <div className="text-2xl font-bold text-orange-600">{scores.O}</div>
-              <div className="text-sm text-gray-600">Player 2 (O)</div>
-              <div className="text-xs">🚀</div>
+              <div className="text-sm text-gray-600">Player 2</div>
             </div>
           </div>
         </div>
@@ -118,17 +130,29 @@ export default function DogeTicTacToe() {
               key={index}
               onClick={() => handleCellClick(index)}
               className={`
-                aspect-square text-4xl font-bold rounded-xl border-4 transition-all duration-200
+                aspect-square rounded-xl border-4 transition-all duration-200 flex items-center justify-center p-2
                 ${cell 
                   ? 'bg-gradient-to-br from-orange-200 to-yellow-200 border-orange-300' 
                   : 'bg-white border-gray-300 hover:border-orange-400 hover:bg-orange-50'
                 }
                 ${!cell && !gameOver ? 'cursor-pointer transform hover:scale-105' : 'cursor-not-allowed'}
-                ${cell === 'X' ? 'text-orange-600' : 'text-yellow-600'}
               `}
               disabled={!!cell || gameOver}
             >
-              {cell}
+              {cell === 'X' && (
+                <img 
+                  src="https://i.imgur.com/QFMJwGH.png" 
+                  alt="Doge Player 1" 
+                  className="w-full h-full object-contain rounded-lg"
+                />
+              )}
+              {cell === 'O' && (
+                <img 
+                  src="https://i.imgur.com/BQmOvKn.png" 
+                  alt="Doge Player 2" 
+                  className="w-full h-full object-contain rounded-lg"
+                />
+              )}
             </button>
           ))}
         </div>
@@ -159,4 +183,7 @@ export default function DogeTicTacToe() {
     </div>
   );
 }
+
+
+
 
